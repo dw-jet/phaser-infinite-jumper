@@ -1,6 +1,9 @@
 import Phaser from '../lib/phaser.js'
 
 export default class Game extends Phaser.Scene {
+  /** @type {Phaser.Physics.Arcade.Sprite} */
+  player
+
   constructor() {
     super('game')
   }
@@ -29,9 +32,26 @@ export default class Game extends Phaser.Scene {
       body.updateFromGameObject()
     }
 
-    const player = this.physics.add.sprite(240, 320, 'bunny-stand')
+    this.player = this.physics.add.sprite(240, 320, 'bunny-stand')
       .setScale(0.5)
 
-    this.physics.add.collider(platforms, player)
+    this.physics.add.collider(platforms, this.player)
+
+    // Ignore collisions unless moving downward
+    this.player.body.checkCollision.up = false
+    this.player.body.checkCollision.left = false
+    this.player.body.checkCollision.right = false
+
+    // Follow that rabbit
+    this.cameras.main.startFollow(this.player)
+  }
+
+  update()
+  {
+    const touchingDown = this.player.body.touching.down
+
+    if (touchingDown) {
+      this.player.setVelocityY(-300)
+    }
   }
 } 
