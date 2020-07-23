@@ -53,6 +53,9 @@ export default class Game extends Phaser.Scene {
 
     // Follow that rabbit
     this.cameras.main.startFollow(this.player)
+
+    // Set horizontal dead zone to 1.5x game width
+    this.cameras.main.setDeadzone(this.scale.width * 1.5)
   }
 
   update()
@@ -73,6 +76,48 @@ export default class Game extends Phaser.Scene {
 
     if (touchingDown) {
       this.player.setVelocityY(-300)
+    }
+
+    if (this.cursors.left.isDown && !touchingDown) {
+      this.player.setVelocityX(-200)
+    }
+    else if (this.cursors.right.isDown && !touchingDown) {
+      this.player.setVelocityX(200)
+    }
+    else {
+      this.player.setVelocityX(0)
+    }
+
+    let right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
+    let left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
+
+    if (right && !touchingDown) {
+      this.player.setVelocityX(200)
+      console.log("Moving right")
+    }
+    else if (left && !touchingDown) {
+      this.player.setVelocityX(-200)
+      console.log("Moving left")
+    }
+    else {
+      this.player.setVelocityX(0)
+      console.log("Not moving")
+    }
+
+    this.horizontalWrap(this.player)
+  }
+
+  horizontalWrap(sprite)
+  {
+    const halfWidth = sprite.displayWidth * 0.5
+    const gameWidth = this.scale.width
+    if (sprite.x < -halfWidth)
+    {
+      sprite.x = gameWidth + halfWidth
+    }
+    else if (sprite.x > gameWidth + halfWidth)
+    {
+      sprite.x = -halfWidth
     }
   }
 } 
