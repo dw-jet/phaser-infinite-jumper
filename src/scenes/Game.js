@@ -7,6 +7,9 @@ export default class Game extends Phaser.Scene {
   /** @type {Phaser.Physics.Arcade.Sprite} */
   player
 
+  /** @type {Phaser.Types.Input.Keyboard.CursorKeys} */
+  cursors
+
   constructor() {
     super('game')
   }
@@ -15,6 +18,8 @@ export default class Game extends Phaser.Scene {
     this.load.image('background', 'assets/bg_layer1.png')
     this.load.image('platform', 'assets/ground_grass.png')
     this.load.image('bunny-stand', 'assets/bunny1_stand.png')
+
+    this.cursors = this.input.keyboard.createCursorKeys()
   }
 
   create() {
